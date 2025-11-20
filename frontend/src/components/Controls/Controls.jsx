@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import './Controls.css';
 import { Message } from '../Message/Message';
 
-export const Controls = ({ 
+export const Controls = memo(({ 
   isDrawing, 
   newPolygonName, 
   currentPointsLength, 
@@ -48,5 +49,7 @@ export const Controls = ({
       <Message message={message} loading={loading} />
     </div>
   );
-};
+});
+
+Controls.displayName = 'Controls';
 

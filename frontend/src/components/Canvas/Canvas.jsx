@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo, useCallback } from 'react';
 import './Canvas.css';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, IMAGE_URL } from '../../config/constants';
 import { drawPolygon, getPolygonColor } from '../../utils/canvasUtils';
 
-export const Canvas = ({ 
+export const Canvas = memo(({ 
   polygons, 
   currentPoints, 
   isDrawing, 
@@ -12,7 +12,7 @@ export const Canvas = ({
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
 
-  const drawCanvas = () => {
+  const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     
@@ -37,13 +37,13 @@ export const Canvas = ({
     if (currentPoints.length > 0) {
       drawPolygon(ctx, currentPoints, 'rgba(255, 255, 0, 0.5)', 'New Polygon', true);
     }
-  };
+  }, [polygons, currentPoints]);
 
   useEffect(() => {
     drawCanvas();
-  }, [polygons, currentPoints]);
+  }, [drawCanvas]);
 
-  const handleCanvasClick = (e) => {
+  const handleCanvasClick = useCallback((e) => {
     if (!isDrawing) return;
 
     const canvas = canvasRef.current;
@@ -54,7 +54,7 @@ export const Canvas = ({
     const y = (e.clientY - rect.top) * scaleY;
 
     onCanvasClick([x, y]);
-  };
+  }, [isDrawing, onCanvasClick]);
 
   return (
     <div className="canvas-container">
@@ -75,5 +75,7 @@ export const Canvas = ({
       />
     </div>
   );
-};
+});
+
+Canvas.displayName = 'Canvas';
 

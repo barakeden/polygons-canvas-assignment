@@ -1,7 +1,9 @@
+import { memo } from 'react';
 import './PolygonList.css';
-import { getPolygonColor } from '../../utils/canvasUtils';
+import { PolygonItem } from './PolygonItem';
 
-export const PolygonList = ({ polygons, loading, onDeletePolygon }) => {
+export const PolygonList = memo(({ polygons, loading, onDeletePolygon }) => {
+  
   return (
     <div className="polygon-list">
       <div className="polygon-list-header">
@@ -12,31 +14,18 @@ export const PolygonList = ({ polygons, loading, onDeletePolygon }) => {
       ) : (
         <ul>
           {polygons.map((polygon) => (
-            <li key={polygon.id}>
-              <div className="polygon-item">
-                <span 
-                  className="polygon-color" 
-                  style={{ 
-                    backgroundColor: getPolygonColor(polygon.id) 
-                  }}
-                />
-                <span className="polygon-name" title={polygon.name}>{polygon.name}</span>
-                <span className="polygon-points">({polygon.points.length} points)</span>
-                <button
-                  onClick={() => onDeletePolygon(polygon.id, polygon.name)}
-                  disabled={loading}
-                  className="btn-delete"
-                  aria-label={`Delete ${polygon.name}`}
-                  title="Delete polygon"
-                >
-                  ×
-                </button>
-              </div>
-            </li>
+            <PolygonItem
+              key={polygon.id}
+              polygon={polygon}
+              loading={loading}
+              onDelete={onDeletePolygon}
+            />
           ))}
         </ul>
       )}
     </div>
   );
-};
+});
+
+PolygonList.displayName = 'PolygonList';
 

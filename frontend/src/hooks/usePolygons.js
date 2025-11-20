@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { polygonsAPI } from '../services/api';
 
 export const usePolygons = () => {
@@ -6,7 +6,7 @@ export const usePolygons = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  const fetchPolygons = async () => {
+  const fetchPolygons = useCallback(async () => {
     setLoading(true);
     setMessage('Loading polygons...');
     try {
@@ -19,9 +19,9 @@ export const usePolygons = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const createPolygon = async (polygonData) => {
+  const createPolygon = useCallback(async (polygonData) => {
     setLoading(true);
     setMessage('Saving polygon...');
     try {
@@ -35,9 +35,9 @@ export const usePolygons = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchPolygons]);
 
-  const deletePolygon = async (id, name) => {
+  const deletePolygon = useCallback(async (id, name) => {
     setLoading(true);
     setMessage(`Deleting polygon "${name}"...`);
     try {
@@ -51,11 +51,11 @@ export const usePolygons = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchPolygons]);
 
   useEffect(() => {
     fetchPolygons();
-  }, []);
+  }, [fetchPolygons]);
 
   return {
     polygons,

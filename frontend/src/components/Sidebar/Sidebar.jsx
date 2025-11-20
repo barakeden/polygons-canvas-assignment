@@ -1,8 +1,9 @@
+import { memo } from 'react';
 import './Sidebar.css';
 import { Controls } from '../Controls/Controls';
 import { PolygonList } from '../PolygonList/PolygonList';
 
-export const Sidebar = ({
+export const Sidebar = memo(({
   isDrawing,
   newPolygonName,
   currentPointsLength,
@@ -33,5 +34,7 @@ export const Sidebar = ({
       />
     </div>
   );
-};
+});
+
+Sidebar.displayName = 'Sidebar';
 

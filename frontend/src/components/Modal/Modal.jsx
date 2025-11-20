@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
+import { useEffect, memo, useCallback } from 'react';
 import './Modal.css';
 
-export const Modal = ({ isOpen, onClose, children, title }) => {
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
+export const Modal = memo(({ isOpen, onClose, children, title }) => {
+  const handleEscape = useCallback((e) => {
+    if (e.key === 'Escape' && isOpen) {
+      onClose();
+    }
+  }, [isOpen, onClose]);
 
+  useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
@@ -18,7 +18,7 @@ export const Modal = ({ isOpen, onClose, children, title }) => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleEscape]);
 
   if (!isOpen) return null;
 
@@ -30,5 +30,7 @@ export const Modal = ({ isOpen, onClose, children, title }) => {
       </div>
     </div>
   );
-};
+});
+
+Modal.displayName = 'Modal';
 

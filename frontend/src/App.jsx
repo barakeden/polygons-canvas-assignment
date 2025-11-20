@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import './App.css';
 import { usePolygons } from './hooks/usePolygons';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { Canvas } from './components/Canvas/Canvas';
 import { NameInputModal } from './components/NameInputModal/NameInputModal';
-import { ConfirmDialog } from './components/ConfirmDialog/ConfirmDialog';
+import { ConfirmDeleteDialog } from './components/ConfirmDeleteDialog/ConfirmDeleteDialog';
 
 function App() {
   const [currentPoints, setCurrentPoints] = useState([]);
@@ -13,7 +13,7 @@ function App() {
   const [showNameModal, setShowNameModal] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
-  
+
   const {
     polygons,
     loading,
@@ -23,20 +23,22 @@ function App() {
     deletePolygon,
   } = usePolygons();
 
-  const handleCanvasClick = (point) => {
-    setCurrentPoints([...currentPoints, point]);
-  };
+  const handleCanvasClick = useCallback((point) => {
+    setCurrentPoints(prev => [...prev, point]);
+  }, []);
 
-  const startDrawing = () => setShowNameModal(true);
+  const startDrawing = useCallback(() => {
+    setShowNameModal(true);
+  }, []);
 
-  const handleNameSubmit = (name) => {
+  const handleNameSubmit = useCallback((name) => {
     setNewPolygonName(name);
     setIsDrawing(true);
     setCurrentPoints([]);
     setMessage('Click on the canvas to add points. Click "Finish Drawing" when done.');
-  };
+  }, [setMessage]);
 
-  const finishDrawing = async () => {
+  const finishDrawing = useCallback(async () => {
     try {
       await createPolygon({
         name: newPolygonName,
@@ -48,21 +50,21 @@ function App() {
     } catch (error) {
       // Error handling is done in the hook
     }
-  };
+  }, [newPolygonName, currentPoints, createPolygon]);
 
-  const cancelDrawing = () => {
+  const cancelDrawing = useCallback(() => {
     setIsDrawing(false);
     setCurrentPoints([]);
     setNewPolygonName('');
     setMessage('');
-  };
+  }, [setMessage]);
 
-  const handleDeletePolygon = (id, name) => {
+  const handleDeletePolygon = useCallback((id, name) => {
     setDeleteTarget({ id, name });
     setShowConfirmDialog(true);
-  };
+  }, []);
 
-  const confirmDelete = async () => {
+  const confirmDelete = useCallback(async () => {
     if (!deleteTarget) return;
 
     try {
@@ -72,7 +74,20 @@ function App() {
     } finally {
       setDeleteTarget(null);
     }
-  };
+  }, [deleteTarget, deletePolygon]);
+
+  const handleNameModalClose = useCallback(() => {
+    setShowNameModal(false);
+  }, []);
+
+  const handleDeleteDialogClose = useCallback(() => {
+    setShowConfirmDialog(false);
+    setDeleteTarget(null);
+  }, []);
+
+  const confirmMessage = useMemo(() => {
+    return deleteTarget ? `Are you sure you want to delete "${deleteTarget.name}"?` : '';
+  }, [deleteTarget]);
 
   return (
     <div className="App">
@@ -101,18 +116,14 @@ function App() {
       </div>
       <NameInputModal
         isOpen={showNameModal}
-        onClose={() => setShowNameModal(false)}
+        onClose={handleNameModalClose}
         onSubmit={handleNameSubmit}
       />
-      <ConfirmDialog
+      <ConfirmDeleteDialog
         isOpen={showConfirmDialog}
-        onClose={() => {
-          setShowConfirmDialog(false);
-          setDeleteTarget(null);
-        }}
+        onClose={handleDeleteDialogClose}
         onConfirm={confirmDelete}
-        title="Delete Polygon"
-        message={deleteTarget ? `Are you sure you want to delete "${deleteTarget.name}"?` : ''}
+        message={confirmMessage}
       />
     </div>
   );

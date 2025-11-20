@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import './Message.css';
 
-export const Message = ({ message, loading }) => {
+export const Message = memo(({ message, loading }) => {
   if (!message) return null;
 
   return (
@@ -9,5 +10,7 @@ export const Message = ({ message, loading }) => {
       {message}
     </div>
   );
-};
+});
+
+Message.displayName = 'Message';
 

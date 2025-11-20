@@ -1,14 +1,17 @@
+import { memo } from 'react';
 import { Modal } from '../Modal/Modal';
-import './ConfirmDialog.css';
+import './ConfirmDeleteDialog.css';
 
-export const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message }) => {
+export const ConfirmDeleteDialog = memo(({ isOpen, onClose, onConfirm, message }) => {
   const handleConfirm = () => {
     onConfirm();
     onClose();
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title || 'Confirm Action'}>
+    <Modal isOpen={isOpen} onClose={onClose} title="Delete Polygon">
       <div className="confirm-dialog">
         <p className="confirm-message">{message}</p>
         <div className="confirm-actions">
@@ -22,5 +25,7 @@ export const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message }) =>
       </div>
     </Modal>
   );
-};
+});
+
+ConfirmDeleteDialog.displayName = 'ConfirmDeleteDialog';
 

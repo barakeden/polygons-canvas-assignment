@@ -1,14 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo, useCallback } from 'react';
 import { Modal } from '../Modal/Modal';
 import './NameInputModal.css';
 
-export const NameInputModal = ({ isOpen, onClose, onSubmit }) => {
+export const NameInputModal = memo(({ isOpen, onClose, onSubmit }) => {
   const [name, setName] = useState('');
   const inputRef = useRef(null);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
+      // Reset name when modal opens
+      setName('');
     }
   }, [isOpen]);
 
@@ -21,10 +23,10 @@ export const NameInputModal = ({ isOpen, onClose, onSubmit }) => {
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setName('');
     onClose();
-  };
+  }, [onClose]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleCancel} title="Enter Polygon Name">
@@ -53,5 +55,7 @@ export const NameInputModal = ({ isOpen, onClose, onSubmit }) => {
       </form>
     </Modal>
   );
-};
+});
+
+NameInputModal.displayName = 'NameInputModal';
 
