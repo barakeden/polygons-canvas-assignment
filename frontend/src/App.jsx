@@ -3,11 +3,16 @@ import './App.css';
 import { usePolygons } from './hooks/usePolygons';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { Canvas } from './components/Canvas/Canvas';
+import { NameInputModal } from './components/NameInputModal/NameInputModal';
+import { ConfirmDialog } from './components/ConfirmDialog/ConfirmDialog';
 
 function App() {
   const [currentPoints, setCurrentPoints] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [newPolygonName, setNewPolygonName] = useState('');
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   
   const {
     polygons,
@@ -22,22 +27,16 @@ function App() {
     setCurrentPoints([...currentPoints, point]);
   };
 
-  const startDrawing = () => {
-    const name = prompt('Enter polygon name:');
-    if (name) {
-      setNewPolygonName(name);
-      setIsDrawing(true);
-      setCurrentPoints([]);
-      setMessage('Click on the canvas to add points. Click "Finish Drawing" when done.');
-    }
+  const startDrawing = () => setShowNameModal(true);
+
+  const handleNameSubmit = (name) => {
+    setNewPolygonName(name);
+    setIsDrawing(true);
+    setCurrentPoints([]);
+    setMessage('Click on the canvas to add points. Click "Finish Drawing" when done.');
   };
 
   const finishDrawing = async () => {
-    if (currentPoints.length < 3) {
-      alert('A polygon must have at least 3 points');
-      return;
-    }
-
     try {
       await createPolygon({
         name: newPolygonName,
@@ -58,15 +57,20 @@ function App() {
     setMessage('');
   };
 
-  const handleDeletePolygon = async (id, name) => {
-    if (!window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      return;
-    }
+  const handleDeletePolygon = (id, name) => {
+    setDeleteTarget({ id, name });
+    setShowConfirmDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
 
     try {
-      await deletePolygon(id, name);
+      await deletePolygon(deleteTarget.id, deleteTarget.name);
     } catch (error) {
       // Error handling is done in the hook
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -75,7 +79,6 @@ function App() {
       <header className="App-header">
         <h1>Polygon Manager</h1>
       </header>
-
       <div className="container">
         <Sidebar
           isDrawing={isDrawing}
@@ -96,6 +99,21 @@ function App() {
           onCanvasClick={handleCanvasClick}
         />
       </div>
+      <NameInputModal
+        isOpen={showNameModal}
+        onClose={() => setShowNameModal(false)}
+        onSubmit={handleNameSubmit}
+      />
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={() => {
+          setShowConfirmDialog(false);
+          setDeleteTarget(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Polygon"
+        message={deleteTarget ? `Are you sure you want to delete "${deleteTarget.name}"?` : ''}
+      />
     </div>
   );
 }
