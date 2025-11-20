@@ -4,7 +4,7 @@ export interface Point {
   }
   
   export interface Polygon {
-    id: number;
+    id: string;
     name: string;
     points: Point[];
   }

@@ -1,4 +1,5 @@
 import path from "path";
+import { v4 as uuidv4 } from "uuid";
 import { Polygon } from "../types/polygon";
 import { delay, readJSON, writeJSON } from "../utils/fileUtils";
 
@@ -19,7 +20,7 @@ export async function create(body: any): Promise<Polygon> {
   }
 
   const polygons = await readJSON<Polygon[]>(POLYGONS_FILE);
-  const newId = polygons.length ? Math.max(...polygons.map(p => p.id)) + 1 : 1;
+  const newId = uuidv4();
 
   const newPolygon: Polygon = { id: newId, name, points };
   polygons.push(newPolygon);
@@ -28,7 +29,7 @@ export async function create(body: any): Promise<Polygon> {
   return newPolygon;
 }
 
-export async function remove(id: number): Promise<{ id: number }> {
+export async function remove(id: string): Promise<{ id: string }> {
   await delay(5000);
 
   const polygons = await readJSON<Polygon[]>(POLYGONS_FILE);

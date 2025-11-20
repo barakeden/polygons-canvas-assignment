@@ -22,7 +22,7 @@ export async function createPolygon(req: Request, res: Response) {
 
 export async function deletePolygon(req: Request, res: Response) {
   try {
-    const id = Number(req.params.id);
+    const id = req.params.id;
     const result = await polygonsService.remove(id);
     res.json(result);
   } catch (e: any) {
