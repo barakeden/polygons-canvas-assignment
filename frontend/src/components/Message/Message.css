@@ -10,9 +10,23 @@
 .message.loading {
   background-color: #e3f2fd;
   color: #1976d2;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .spinner {
-  margin-right: 0.5rem;
+  margin-right: 0.5rem;  display: inline-block;
+  animation: spin 1s linear infinite;
+  font-size: 1.2em;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 

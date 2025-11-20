@@ -58,5 +58,8 @@
   border: 1px solid #ffc107;
   border-radius: 4px;
   font-size: 0.9rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 

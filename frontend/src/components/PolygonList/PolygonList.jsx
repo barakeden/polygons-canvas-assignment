@@ -4,7 +4,9 @@ import { getPolygonColor } from '../../utils/canvasUtils';
 export const PolygonList = ({ polygons, loading, onDeletePolygon }) => {
   return (
     <div className="polygon-list">
-      <h2>Polygons ({polygons.length})</h2>
+      <div className="polygon-list-header">
+        <h2>Polygons ({polygons.length})</h2>
+      </div>
       {polygons.length === 0 ? (
         <p className="empty-message">No polygons yet. Create one!</p>
       ) : (
