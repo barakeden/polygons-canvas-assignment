@@ -1,0 +1,85 @@
+.polygon-list {
+  margin-top: 2rem;
+}
+
+.polygon-list h2 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.polygon-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.polygon-list li {
+  margin-bottom: 0.5rem;
+}
+
+.polygon-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.polygon-item:hover {
+  background-color: #e9ecef;
+}
+
+.polygon-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  border: 2px solid #333;
+  flex-shrink: 0;
+}
+
+.polygon-name {
+  flex: 1;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.polygon-points {
+  color: #666;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #dc3545;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+  opacity: 0.7;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+
+.btn-delete:hover:not(:disabled) {
+  opacity: 1;
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.btn-delete:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.empty-message {
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+

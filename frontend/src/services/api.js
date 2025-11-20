@@ -24,19 +24,16 @@ async function apiRequest(endpoint, options = {}) {
   }
 }
 
-// API methods
 export const polygonsAPI = {
-  // Get all polygons
   getAll: () => apiRequest('/polygons'),
   
-  // Create a new polygon
   create: (polygon) => apiRequest('/polygons', {
     method: 'POST',
     body: JSON.stringify(polygon),
   }),
   
-  // Delete a polygon
   delete: (id) => apiRequest(`/polygons/${id}`, {
     method: 'DELETE',
   }),
 };
+
