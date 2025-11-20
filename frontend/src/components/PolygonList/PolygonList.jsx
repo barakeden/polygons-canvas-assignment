@@ -18,7 +18,7 @@ export const PolygonList = ({ polygons, loading, onDeletePolygon }) => {
                     backgroundColor: getPolygonColor(polygon.id) 
                   }}
                 />
-                <span className="polygon-name">{polygon.name}</span>
+                <span className="polygon-name" title={polygon.name}>{polygon.name}</span>
                 <span className="polygon-points">({polygon.points.length} points)</span>
                 <button
                   onClick={() => onDeletePolygon(polygon.id, polygon.name)}
